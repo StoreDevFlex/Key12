@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flex Key System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 text-center relative overflow-hidden">
+        
+        <!-- Üst Dekoratif Parlama -->
+        <div class="absolute -top-24 -left-24 w-48 h-48 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -right-24 w-48 h-48 bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Marka / Logo Alanı (Mavi Tikli Flex) -->
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <h1 class="text-3xl font-black tracking-wider text-white">Flex</h1>
+            <!-- Mavi Onay Tiki -->
+            <div class="bg-blue-500 text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/50" title="Verified Hub">
+                <i class="fa-solid fa-check text-xs"></i>
+            </div>
+        </div>
+        <p class="text-indigo-400 font-semibold text-sm tracking-wide mb-8">Flex Key System</p>
+
+        <!-- Ana İşlem Alanı -->
+        <div class="space-y-4">
+            <p class="text-slate-400 text-sm">Flex Hub'ı kullanabilmek için aşağıdaki butona tıklayarak havuzdan rastgele anahtarını alabilirsin.</p>
+
+            <button id="getKeyBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center justify-center gap-2 cursor-pointer">
+                <i class="fa-solid fa-key"></i> Key Al
+            </button>
+        </div>
+
+        <!-- Key Gösterme Alanı (Başlangıçta Gizli) -->
+        <div id="keyBoxContainer" class="mt-6 hidden transition-all duration-300">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Sana Özel Key:</label>
+            <div class="flex items-center gap-2 bg-slate-950 border border-slate-800 rounded-xl p-2">
+                <input type="text" id="generatedKey" readonly class="w-full bg-transparent text-emerald-400 font-mono text-sm px-2 focus:outline-none select-all" value="">
+                <button id="copyBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm transition flex items-center gap-1.5 cursor-pointer">
+                    <i class="fa-regular fa-copy"></i> Kopyala
+                </button>
+            </div>
+            <p id="copyStatus" class="text-xs text-emerald-400 mt-2 hidden">✨ Key panoya kopyalandı!</p>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-8 text-xs text-slate-500">
+            Flex Security & Protection © 2026
+        </div>
+    </div>
+
+    <script>
+        // 1001 ile 1100 arasındaki 100 adet key'i otomatik oluşturan havuz
+        const keyList = [];
+        for (let i = 1001; i <= 1100; i++) {
+            keyList.push(`flex_key_${i}`);
+        }
+
+        const getKeyBtn = document.getElementById('getKeyBtn');
+        const keyBoxContainer = document.getElementById('keyBoxContainer');
+        const generatedKeyInput = document.getElementById('generatedKey');
+        const copyBtn = document.getElementById('copyBtn');
+        const copyStatus = document.getElementById('copyStatus');
+
+        getKeyBtn.addEventListener('click', () => {
+            // Mobilde klavye açılmasını engelle
+            if (document.activeElement) document.activeElement.blur();
+
+            getKeyBtn.innerHTML = '<i class="fa-solid fa-spinner animate-spin"></i> Key Üretiliyor...';
+            getKeyBtn.disabled = true;
+
+            setTimeout(() => {
+                // Havuzdan rastgele bir key seç
+                const randomIndex = Math.floor(Math.random() * keyList.length);
+                const selectedKey = keyList[randomIndex];
+
+                // Inputa yaz ve kutuyu göster
+                generatedKeyInput.value = selectedKey;
+                keyBoxContainer.classList.remove('hidden');
+
+                getKeyBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Yeni Key Al';
+                getKeyBtn.disabled = false;
+            }, 600);
+        });
+
+        // Kopyala Butonu
+        copyBtn.addEventListener('click', () => {
+            generatedKeyInput.select();
+            generatedKeyInput.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(generatedKeyInput.value);
+
+            copyStatus.classList.remove('hidden');
+            setTimeout(() => {
+                copyStatus.classList.add('hidden');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
